@@ -1,24 +1,47 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, Modal } from 'react-native';
 import { useState } from 'react';
+
+import { NavigationContainer, StackActions } from '@react-navigation/native';
+import  {createStackNavigator} from '@react-navigation/stack'
+
+import SavedPasswords from './src/screens/SavedPasswords';
+
 import { ModalPassword } from './src/components/modal';
 
  
 let charset = "abcdefghijklmnopqrstuvwxyz!#$&%0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
  
-export default function App() {
-  const [senhaGerada, setSenhaGerada] = useState("")
-  const [modalVisible, setModalVisible] = useState(false)
+const stack = createStackNavigator();
+
+function HomeScreen ({ navigation}) {
+  const [senhaGerada, setSenhaGerada] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [savedPasswords, setSavedPassword] = useState([]);
+
+
+}
+
  
   function gerarSenha() {
     let senha = "";
  
     for (let i = 0, n = charset.length; i < 10; i++) {
-      senha += charset.charAt(Math.floor(Math.random() * n))
+      senha += charset.charAt(Math.floor(Math.random() * n));
     }
-    setSenhaGerada(senha)
-    setModalVisible(true)
+    setSenhaGerada(senha);
+    setModalVisible(true);
  
   }
+
+  function salvarSenha(){
+    setSavedPasswords(prevPasswords => {
+      const upatedPasswords = [...prevPasswords, senhaGerada];
+      setModalVisible(false);
+      navigation.navigate('SavedPasswords', { savedPasswords: updatedPasswords});
+      return updatedPasswords;
+   });
+
+} 
  
   return (
     <View style={styles.container}>
@@ -31,11 +54,25 @@ export default function App() {
         <Text style={styles.textButton}>Gerar Senha</Text>
       </TouchableOpacity>
       <Modal visible={modalVisible} animationType='fade' transparent={true}>
-        <ModalPassword senha={senhaGerada} fecharModal={() => setModalVisible(false)}/>
+        <ModalPassword senha={senhaGerada} fecharModal={() => setModalVisible(false)} salvarSenha={salvarSenha}/>
       </Modal>
+      <Text style={styles.senha}>{senhaGerada}</Text>
     </View>
   );
-}
+
+  export default function App() {
+
+    return {
+
+    <NavigationContainer>
+     <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="SavedPasswords" component = {savedPasswords} />
+     </Stack.Navigator>
+     </NavigationContainer>
+
+    };
+  }
  
 const styles = StyleSheet.create({
   container: {
