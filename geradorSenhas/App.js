@@ -51,7 +51,7 @@ function HomeScreen ({ navigation}) {
       />
       <Text style={styles.title}>LockGen</Text>
       <TouchableOpacity style={styles.button} onPress={gerarSenha}>
-        <Text style={styles.textButton}>Gerar Senha</Text>
+        <Text style={styles.textButton}>Gerar Senhaa</Text>
       </TouchableOpacity>
       <Modal visible={modalVisible} animationType='fade' transparent={true}>
         <ModalPassword senha={senhaGerada} fecharModal={() => setModalVisible(false)} salvarSenha={salvarSenha}/>
